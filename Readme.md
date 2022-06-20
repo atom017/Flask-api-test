@@ -1,3 +1,5 @@
+### Run Command to install requirements
+- pip install -r requirements.txt
 
 ### API URL
 
