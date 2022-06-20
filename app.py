@@ -7,7 +7,7 @@ import base64
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import os
+from users import users
 
 matplotlib.use('Agg')
 
@@ -18,11 +18,12 @@ app.secret_key="secret"
 CORS(app, support_credentials=True)
 
 
+#main route
 @app.route('/')
 def home():
     return jsonify({'message':'Welcome'})
 
-
+#plot
 @app.route('/plot')
 def plot():
     df_id = df.ID
@@ -34,8 +35,22 @@ def plot():
     plt.savefig(img, format='png')
     plt.close()
     img.seek(0)
-    
     return send_file(img, mimetype='image/png')
+
+
+#login
+@app.route('/login',methods=['GET','POST'])
+def login():
+    
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        username = request.form['username']
+        password_input = request.form['password']
+        if username == users['User_Name'] and password_input == users['User_Password']:
+            return jsonify({'success':username})
+        return jsonify({'unsuccessful login with username: ':username})
+    else:
+        return jsonify({'error':'Send both username and password'})
+    
 
 
 if __name__ == "__main__":
