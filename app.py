@@ -65,7 +65,7 @@ def boxplot():
 @app.route('/login',methods=['GET','POST'])
 def login():
     
-    if request.method == 'POST' and request.json:
+    if request.method == 'POST' and 'username' in request.json and 'password' in request.json:
         print(request.json)
         username = request.json['username']
         password_input = request.json['password']
@@ -79,9 +79,9 @@ def login():
 
 @app.route('/reset',methods=['GET','POST'])
 def reset():
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        username = request.form['username']
-        password = request.form['password']
+    if request.method == 'POST' and 'username' in request.json and 'password' in request.json:
+        username = request.json['username']
+        password = request.json['password']
         new_password = request.form['new_password']
         if users['User_name'] == username and users['User_Password']==password:           
             return jsonify({'password reset success':username}),201
