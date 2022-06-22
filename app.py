@@ -65,7 +65,8 @@ def boxplot():
 @app.route('/login',methods=['GET','POST'])
 def login():
     
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+    if request.method == 'POST':
+        print(request.form)
         username = request.form['username']
         password_input = request.form['password']
         if username == users['User_Name'] and password_input == users['User_Password']:
@@ -88,5 +89,9 @@ def reset():
             return jsonify({'error':'Username or Password incorrect incorrect'})
 
 
+@app.route('/<string:username>/jobtitles')
+def jobtitles(username):
+
+    return jsonify({'jobs':['React','UI/UX Designer','Frontend Developer']})
 if __name__ == "__main__":
     app.run(debug=True)
