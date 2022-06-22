@@ -65,13 +65,14 @@ def boxplot():
 @app.route('/login',methods=['GET','POST'])
 def login():
     
-    if request.method == 'POST':
-        print(request.form)
-        username = request.form['username']
-        password_input = request.form['password']
+    if request.method == 'POST' and request.json:
+        print(request.json)
+        username = request.json['username']
+        password_input = request.json['password']
         if username == users['User_Name'] and password_input == users['User_Password']:
             return jsonify({'success':username}),201
-        return jsonify({'error':'Incorrect credentials'})
+        else:
+            return jsonify({'error':'Incorrect credentials'})
     else:
         return jsonify({'error':'Send both username and password'})
 
@@ -82,8 +83,7 @@ def reset():
         username = request.form['username']
         password = request.form['password']
         new_password = request.form['new_password']
-        if users['User_name'] == username and users['User_Password']==password:
-            
+        if users['User_name'] == username and users['User_Password']==password:           
             return jsonify({'password reset success':username}),201
         else:
             return jsonify({'error':'Username or Password incorrect incorrect'})
