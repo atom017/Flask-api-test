@@ -101,7 +101,7 @@ def reset():
         #     return jsonify({'password reset success':username}),201
         # else:
         #     return jsonify({'error':'Username or Password incorrect incorrect'})
-        new_password = request.form['new_password']
+        new_password = request.json['new_password']
         
         cursor = mysql.connection.cursor()
         print('connected to db')
