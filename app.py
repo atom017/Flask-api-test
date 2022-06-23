@@ -75,12 +75,9 @@ def login():
         print(request.json)
         username = request.json['username']
         password_input = request.json['password']
-        # if username == users['User_Name'] and password_input == users['User_Password']:
-        #     return jsonify({'success':username}),201
-        # else:
-        #     return jsonify({'error':'Incorrect credentials'})
+        
         cursor = mysql.connection.cursor()
-        print('connected')
+        print('connected to db: user_login')
         query = "Select *from user_login WHERE User_Name=%s "
         cursor.execute(query,(username,))
         user = cursor.fetchone()
@@ -96,20 +93,44 @@ def login():
 
 @app.route('/reset',methods=['GET','POST'])
 def reset():
-    if request.method == 'POST' and 'username' in request.json and 'password' in request.json:
+    if request.method == 'POST' and 'username' in request.json and 'password' in request.json and 'new_password' in request.json:
         username = request.json['username']
         password = request.json['password']
-        new_password = request.json['new_password']
-        if users['User_name'] == username and users['User_Password']==password:           
-            return jsonify({'password reset success':username}),201
+        # new_password = request.json['new_password']
+        # if users['User_name'] == username and users['User_Password']==password:           
+        #     return jsonify({'password reset success':username}),201
+        # else:
+        #     return jsonify({'error':'Username or Password incorrect incorrect'})
+        new_password = request.form['new_password']
+        
+        cursor = mysql.connection.cursor()
+        print('connected to db')
+        query1 = "Select *from user_login WHERE User_Name=%s "
+        cursor.execute(query1,(username,))
+        user = cursor.fetchone()
+    
+        if user and user[1] == password:
+            
+            query = "UPDATE user_login SET User_Password = %s"
+            cursor.execute(query,(new_password,))
+            mysql.connection.commit()
+            cursor.close()
+            return jsonify({'reset success':username})
         else:
-            return jsonify({'error':'Username or Password incorrect incorrect'})
+            return jsonify({'error':'Please Enter correct Password'})
+    else:
+        return jsonify({'error':'Please provide required fields'})
 
 
 @app.route('/<string:username>/jobtitles')
 def jobtitles(username):
     #select from jobs_table with matching username
-    print(username)
+    cursor = mysql.connection.cursor()
+    print('connected to JobPosition')
+    query = "Select *from JobPosition WHERE User_Name=%s "
+    cursor.execute(query,(username,))
+    jobs = cursor.fetchall()
+    print('Job positions: ',jobs)
     return jsonify({'jobs':['React','UI/UX Designer','Frontend Developer']})
 
     
