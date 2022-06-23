@@ -92,6 +92,7 @@ def login():
 
 
 @app.route('/reset',methods=['GET','POST'])
+
 def reset():
     if request.method == 'POST' and 'username' in request.json and 'password' in request.json and 'new_password' in request.json:
         username = request.json['username']
